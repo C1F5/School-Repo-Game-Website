@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>School Game Hub</title>
+
+    <style>
+        :root {
+            --bg: #f1f5f9;
+            --card: #ffffff;
+            --text: #172033;
+            --muted: #64748b;
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --header: #ffffff;
+            --border: #e2e8f0;
+        }
+
+        body.dark {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --header: #1e293b;
+            --border: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            transition: background 0.25s, color 0.25s;
+        }
+
+        /* HEADER */
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: var(--header);
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .navbar {
+            max-width: 1500px;
+            margin: auto;
+            height: 70px;
+            padding: 0 20px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 21px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: var(--primary);
+            color: white;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 21px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        button {
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .nav-btn {
+            background: transparent;
+            color: var(--text);
+            padding: 10px 13px;
+            border-radius: 9px;
+            font-size: 14px;
+        }
+
+        .nav-btn:hover {
+            background: var(--bg);
+        }
+
+        .settings-btn {
+            background: var(--primary);
+            color: white;
+            padding: 10px 14px;
+            border-radius: 9px;
+            font-size: 14px;
+        }
+
+        .settings-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        /* HERO */
+
+        .hero {
+            max-width: 1200px;
+            margin: auto;
+            padding: 55px 20px 30px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: clamp(32px, 5vw, 52px);
+            margin: 0 0 12px;
+        }
+
+        .hero p {
+            color: var(--muted);
+            margin: 0 auto 25px;
+            max-width: 650px;
+            line-height: 1.6;
+        }
+
+        /* SEARCH */
+
+        .search-container {
+            max-width: 600px;
+            margin: auto;
+            position: relative;
+        }
+
+        .search {
+            width: 100%;
+            padding: 15px 18px 15px 45px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--card);
+            color: var(--text);
+            font-size: 16px;
+            outline: none;
+        }
+
+        .search:focus {
+            border-color: var(--primary);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted);
+        }
+
+        /* GAME GRID */
+
+        .games {
+            max-width: 1500px;
+            margin: 15px auto 50px;
+            padding: 0 20px;
+
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 22px;
+        }
+
+        .game {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            overflow: hidden;
+
+            box-shadow: 0 5px 18px rgba(0, 0, 0, 0.06);
+
+            transition:
+                transform 0.2s,
+                box-shadow 0.2s;
+        }
+
+        .game:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .game.hidden {
+            display: none;
+        }
+
+        .game-header {
+            min-height: 55px;
+            padding: 10px 13px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .game-name {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            font-weight: bold;
+        }
+
+        .game-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            background: var(--primary);
+            color: white;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 13px;
+        }
+
+        .game-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 7px;
+            background: var(--bg);
+            color: var(--text);
+            font-size: 15px;
+        }
+
+        .action-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        iframe {
+            display: block;
+            width: 100%;
+            height: 300px;
+            border: 0;
+            background: #e2e8f0;
+        }
+
+        /* SETTINGS PANEL */
+
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            z-index: 2000;
+
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.2s;
+        }
+
+        .overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .settings-panel {
+            position: fixed;
+            top: 0;
+            right: -360px;
+            z-index: 2100;
+
+            width: min(360px, 90vw);
+            height: 100vh;
+
+            background: var(--card);
+            color: var(--text);
+
+            box-shadow: -5px 0 25px rgba(0, 0, 0, 0.2);
+
+            padding: 25px;
+
+            transition: right 0.25s;
+            overflow-y: auto;
+        }
+
+        .settings-panel.open {
+            right: 0;
+        }
+
+        .settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 25px;
+        }
+
+        .settings-header h2 {
+            margin: 0;
+        }
+
+        .close-btn {
+            width: 35px;
+            height: 35px;
+            border-radius: 8px;
+            background: var(--bg);
+            color: var(--text);
+            font-size: 20px;
+        }
+
+        .setting {
+            padding: 17px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .setting-title {
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+        .setting-description {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        /* TOGGLE */
+
+        .toggle {
+            width: 48px;
+            height: 26px;
+            background: #94a3b8;
+            border-radius: 20px;
+            position: relative;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .toggle::after {
+            content: "";
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+
+            position: absolute;
+            top: 3px;
+            left: 3px;
+
+            transition: 0.2s;
+        }
+
+        .toggle.active {
+            background: var(--primary);
+        }
+
+        .toggle.active::after {
+            transform: translateX(22px);
+        }
+
+        /* FOOTER */
+
+        footer {
+            text-align: center;
+            padding: 35px 20px;
+            color: var(--muted);
+            border-top: 1px solid var(--border);
+        }
+
+        /* NO RESULTS */
+
+        #noResults {
+            display: none;
+            text-align: center;
+            color: var(--muted);
+            padding: 50px;
+            grid-column: 1 / -1;
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 650px) {
+            .navbar {
+                height: 62px;
+            }
+
+            .logo-text {
+                display: none;
+            }
+
+            .nav-btn {
+                display: none;
+            }
+
+            .hero {
+                padding-top: 35px;
+            }
+
+            .games {
+                grid-template-columns: 1fr;
+                padding: 0 12px;
+            }
+
+            iframe {
+                height: 270px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+
+    <header>
+        <div class="navbar">
+
+            <div class="logo">
+                <div class="logo-icon">🎮</div>
+                <span class="logo-text">School Game Hub</span>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="scrollToGames()">
+                    Games
+                </button>
+
+                <button class="nav-btn" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+                    Home
+                </button>
+
+                <button class="settings-btn" onclick="openSettings()">
+                    ⚙ Settings
+                </button>
+            </div>
+
+        </div>
+    </header>
+
+
+    <!-- HERO -->
+
+    <section class="hero">
+
+        <h1>🎮 Game Hub</h1>
+
+        <p>
+            Welcome to the school game hub.
+            Search for a game below and start playing.
+        </p>
+
+        <div class="search-container">
+
+            <span class="search-icon">🔎</span>
+
+            <input
+                id="search"
+                class="search"
+                type="text"
+                placeholder="Search games..."
+                oninput="searchGames()"
+            >
+
+        </div>
+
+    </section>
+
+
+    <!-- GAMES -->
+
+    <main class="games" id="games">
+
+
+        <!-- GAME 1 -->
+        <div class="game" data-name="Game 1">
+            <div class="game-header">
+                <div class="game-name">
+                    <span class="game-number">1</span>
+                    Game 1
+                </div>
+
+                <div class="game-actions">
+                    <button class="action-btn" onclick="fullscreenGame(this)" title="Fullscreen">
+                        ⛶
+                    </button>
+                </div>
+            </div>
+
+            <iframe
+                src="YOUR_GITHUB_URL_HERE"
+                allowfullscreen>
+            </iframe>
+        </div>
+
+
+        <!-- GAME 2 -->
+        <div class="game" data-name="Game 2">
+            <div class="game-header">
+                <div class="game-name"><span class="game-number">2</span>Game 2</div>
+                <div class="game-actions">
+                    <button class="action-btn" onclick="fullscreenGame(this)">⛶</button>
+                </div>
+            </div>
+            <iframe src="YOUR_GITHUB_URL_HERE" allowfullscreen></iframe>
+        </div>
+
+
+        <!-- GAME 3 -->
+        <div class="game" data-name="Game 3">
+            <div class="game-header">
+                <div class="game-name"><span class="game-number">3</span>Game 3</div>
+                <div class="game-actions">
+                    <button class="action-btn" onclick="fullscreenGame(this)">⛶</button>
+                </div>
+            </div>
+            <iframe src="YOUR_GITHUB_URL_HERE" allowfullscreen></iframe>
+        </div>
+
+
+        <!-- GAME 4 -->
+        <div class="game" data-name="Game 4">
+            <div class="game-header">
+                <div class="game-name"><span class="game-number">4</span>Game 4</div>
+                <div class="game-actions">
+                    <button class="action-btn" onclick="fullscreenGame(this)">⛶</button>
+                </div>
+            </div>
+            <iframe src="YOUR_GITHUB_URL_HERE" allowfullscreen></iframe>
+        </div>
+
+
+        <!-- GAME 5 -->
+        <div class="game" data-name="Game 5">
+            <div class="game-header">
+                <div class="game-name"><span class="game-number">5</span>Game 5</div>
+                <div class="game-actions">
+                    <button class="action-btn" onclick="fullscreenGame(this)">⛶</button>
+                </div>
+            </div>
+            <iframe src="YOUR_GITHUB_URL_HERE" allowfullscreen></iframe>
+        </div>
+
+
+        <!-- GAME 6 -->
+        <div class="game" data-name="Game 6">
+            <div class="game-header">
+                <div class="game-name"><span class="game-number">6</span>Game 6</div>
+                <div class="game-actions">
+                    <button class="action-btn" onclick="fullscreenGame(this)">⛶</button>
+                </div>
+            </div>
+            <iframe src="YOUR_GITHUB_URL_HERE" allowfullscreen></iframe>
+        </div>
+
+
+        <!-- GAME 7 -->
+        <div class="game" data-name="Game 7">
+            <div class="game-header">
+                <div class="game-name"><span class="game-number">7</span>Game 7</div>
+                <div class="game-actions">
+                    <button class="action-btn" onclick="fullscreenGame(this)">⛶</button>
+                </div>
+            </div>
+            <iframe src="YOUR_GITHUB_URL_HERE" allowfullscreen></iframe>
+        </div>
+
+
+        <!-- GAME 8 -->
+        <div class="game" data-name="Game 8">
+            <div class="game-header">
+                <div class="game-name"><span class="game-number">8</span>Game 8</div>
+                <div class="game-actions">
+                    <button class="action-btn" onclick="fullscreenGame(this)">⛶</button>
+                </div>
+            </div>
+            <iframe src="YOUR_GITHUB_URL_HERE" allowfullscreen></iframe>
+        </div>
+
+
+        <!-- GAME 9 -->
+        <div class="game" data-name="Game 9">
+            <div class="game-header">
+                <div class="game-name"><span class="game-number">9</span>Game 9</div>
+                <div class="game-actions">
+                    <button class="action-btn" onclick="fullscreenGame(this)">⛶</button>
+                </div>
+            </div>
+            <iframe src="YOUR_GITHUB_URL_HERE" allowfullscreen></iframe>
+        </div>
+
+
+        <!-- GAME 10 -->
+        <div class="game" data-name="Game 10">
+            <div class="game-header">
+                <div class="game-name"><span class="game-number">10</span>Game 10</div>
+                <div class="game-actions">
+                    <button class="action-btn" onclick="fullscreenGame(this)">⛶</button>
+                </div>
+            </div>
+            <iframe src="YOUR_GITHUB_URL_HERE" allowfullscreen></iframe>
+        </div>
+
+
+        <!-- GAME 11 -->
+        <div class="game" data-name="Game 11">
+            <div class="game-header">
+                <div class="game-name"><span class="game-number">11</span>Game 11</div>
+                <div class="game-actions">
+                    <button class="action-btn" onclick="fullscreenGame(this)">⛶</button>
+                </div>
+            </div>
+            <iframe src="YOUR_GITHUB_URL_HERE" allowfullscreen></iframe>
+        </div>
+
+
+        <!-- GAME 12 -->
+        <div class="game" data-name="Game 12">
+            <div class="game-header">
+                <div class="game-name"><span class="game-number">12</span>Game 12</div>
+                <div class="game-actions">
+                    <button class="action-btn" onclick="fullscreenGame(this)">⛶</button>
+                </div>
+            </div>
+            <iframe src="YOUR_GITHUB_URL_HERE" allowfullscreen></iframe>
+        </div>
+
+
+        <!-- GAME 13 -->
+        <div class="game" data-name="Game 13">
+            <div class="game-header">
+                <div class="game-name"><span class="game-number">13</span>Game 13</div>
+                <div class="game-actions">
+                    <button class="action-btn" onclick="fullscreenGame(this)">⛶</button>
+                </div>
+            </div>
+            <iframe src="YOUR_GITHUB_URL_HERE" allowfullscreen></iframe>
+        </div>
+
+
+        <!-- GAME 14 -->
+        <div class="game" data-name="Game 14">
+            <div class="game-header">
+                <div class="game-name"><span class="game-number">14</span>Game 14</div>
+                <div class="game-actions">
+                    <button class="action-btn" onclick="fullscreenGame(this)">⛶</button>
+                </div>
+            </div>
+            <iframe src="YOUR_GITHUB_URL_HERE" allowfullscreen></iframe>
+        </div>
+
+
+        <!-- GAME 15 -->
+        <div class="game" data-name="Game 15">
+            <div class="game-header">
+                <div class="game-name"><span class="game-number">15</span>Game 15</div>
+                <div class="game-actions">
+                    <button class="action-btn" onclick="fullscreenGame(this)">⛶</button>
+                </div>
+            </div>
+            <iframe src="YOUR_GITHUB_URL_HERE" allowfullscreen></iframe>
+        </div>
+
+
+        <!-- GAME 16 -->
+        <div class="game" data-name="Game 16">
+            <div class="game-header">
+                <div class="game-name"><span class="game-number">16</span>Game 16</div>
+                <div class="game-actions">
+                    <button class="action-btn" onclick="fullscreenGame(this)">⛶</button>
+                </div>
+            </div>
+            <iframe src="YOUR_GITHUB_URL_HERE" allowfullscreen></iframe>
+        </div>
+
+
+        <!-- GAME 17 -->
+        <div class="game" data-name="Game 17">
+            <div class="game-header">
+                <div class="game-name"><span class="game-number">17</span>Game 17</div>
+                <div class="game-actions">
+                    <button class="action-btn" onclick="fullscreenGame(this)">⛶</button>
+                </div>
+            </div>
+            <iframe src="YOUR_GITHUB_URL_HERE" allowfullscreen></iframe>
+        </div>
+
+
+        <!-- GAME 18 -->
+        <div class="game" data-name="Game 18">
+            <div class="game-header">
+                <div class="game-name"><span class="game-number">18</span>Game 18</div>
+                <div class="game-actions">
+                    <button class="action-btn" onclick="fullscreenGame(this)">⛶</button>
+                </div>
+            </div>
+            <iframe src="YOUR_GITHUB_URL_HERE" allowfullscreen></iframe>
+        </div>
+
+
+        <!-- GAME 19 -->
+        <div class="game" data-name="Game 19">
+            <div class="game-header">
+                <div class="game-name"><span class="game-number">19</span>Game 19</div>
+                <div class="game-actions">
+                    <button class="action-btn" onclick="fullscreenGame(this)">⛶</button>
+                </div>
+            </div>
+            <iframe src="YOUR_GITHUB_URL_HERE" allowfullscreen></iframe>
+        </div>
+
+
+        <!-- GAME 20 -->
+        <div class="game" data-name="Game 20">
+            <div class="game-header">
+                <div class="game-name"><span class="game-number">20</span>Game 20</div>
+                <div class="game-actions">
+                    <button class="action-btn" onclick="fullscreenGame(this)">⛶</button>
+                </div>
+            </div>
+            <iframe src="YOUR_GITHUB_URL_HERE" allowfullscreen></iframe>
+        </div>
+
+
+        <!-- GAME 21 -->
+        <div class="game" data-name="Game 21">
+            <div class="game-header">
+                <div class="game-name"><span class="game-number">21</span>Game 21</div>
+                <div class="game-actions">
+                    <button class="action-btn" onclick="fullscreenGame(this)">⛶</button>
+                </div>
+            </div>
+            <iframe src="YOUR_GITHUB_URL_HERE" allowfullscreen></iframe>
+        </div>
+
+
+        <!-- GAME 22 -->
+        <div class="game" data-name="Game 22">
+            <div class="game-header">
+                <div class="game-name"><span class="game-number">22</span>Game 22</div>
+                <div class="game-actions">
+                    <button class="action-btn" onclick="fullscreenGame(this)">⛶</button>
+                </div>
+            </div>
+            <iframe src="YOUR_GITHUB_URL_HERE" allowfullscreen></iframe>
+        </div>
+
+
+        <!-- GAME 23 -->
+        <div class="game" data-name="Game 23">
+            <div class="game-header">
+                <div class="game-name"><span class="game-number">23</span>Game 23</div>
+                <div class="game-actions">
+                    <button class="action-btn" onclick="fullscreenGame(this)">⛶</button>
+                </div>
+            </div>
+            <iframe src="YOUR_GITHUB_URL_HERE" allowfullscreen></iframe>
+        </div>
+
+
+        <!-- GAME 24 -->
+        <div class="game" data-name="Game 24">
+            <div class="game-header">
+                <div class="game-name"><span class="game-number">24</span>Game 24</div>
+                <div class="game-actions">
+                    <button class="action-btn" onclick="fullscreenGame(this)">⛶</button>
+                </div>
+            </div>
+            <iframe src="YOUR_GITHUB_URL_HERE" allowfullscreen></iframe>
+        </div>
+
+
+        <!-- GAME 25 -->
+        <div class="game" data-name="Game 25">
+            <div class="game-header">
+                <div class="game-name"><span class="game-number">25</span>Game 25</div>
+                <div class="game-actions">
+                    <button class="action-btn" onclick="fullscreenGame(this)">⛶</button>
+                </div>
+            </div>
+            <iframe src="YOUR_GITHUB_URL_HERE" allowfullscreen></iframe>
+        </div>
+
+
+        <!-- GAME 26 -->
+        <div class="game" data-name="Game 26">
+            <div class="game-header">
+                <div class="game-name"><span class="game-number">26</span>Game 26</div>
+                <div class="game-actions">
+                    <button class="action-btn" onclick="fullscreenGame(this)">⛶</button>
+                </div>
+            </div>
+            <iframe src="YOUR_GITHUB_URL_HERE" allowfullscreen></iframe>
+        </div>
+
+
+        <!-- GAME 27 -->
+        <div class="game" data-name="Game 27">
+            <div class="game-header">
+                <div class="game-name"><span class="game-number">27</span>Game 27</div>
+                <div class="game-actions">
+                    <button class="action-btn" onclick="fullscreenGame(this)">⛶</button>
+                </div>
+            </div>
+            <iframe src="YOUR_GITHUB_URL_HERE" allowfullscreen></iframe>
+        </div>
+
+
+        <!-- GAME 28 -->
+        <div class="game" data-name="Game 28">
+            <div class="game-header">
+                <div class="game-name"><span class="game-number">28</span>Game 28</div>
+                <div class="game-actions">
+                    <button class="action-btn" onclick="fullscreenGame(this)">⛶</button>
+                </div>
+            </div>
+            <iframe src="YOUR_GITHUB_URL_HERE" allowfullscreen></iframe>
+        </div>
+
+
+        <!-- GAME 29 -->
+        <div class="game" data-name="Game 29">
+            <div class="game-header">
+                <div class="game-name"><span class="game-number">29</span>Game 29</div>
+                <div class="game-actions">
+                    <button class="action-btn" onclick="fullscreenGame(this)">⛶</button>
+                </div>
+            </div>
+            <iframe src="YOUR_GITHUB_URL_HERE" allowfullscreen></iframe>
+        </div>
+
+
+        <!-- GAME 30 -->
+        <div class="game" data-name="Game 30">
+            <div class="game-header">
+                <div class="game-name"><span class="game-number">30</span>Game 30</div>
+                <div class="game-actions">
+                    <button class="action-btn" onclick="fullscreenGame(this)">⛶</button>
+                </div>
+            </div>
+            <iframe src="YOUR_GITHUB_URL_HERE" allowfullscreen></iframe>
+        </div>
+
+
+        <div id="noResults">
+            <h2>No games found</h2>
+            <p>Try a different search.</p>
+        </div>
+
+    </main>
+
+
+    <!-- FOOTER -->
+
+    <footer>
+        <p>🎮 School Game Hub</p>
+        <p>Games are embedded from external websites.</p>
+    </footer>
+
+
+    <!-- SETTINGS OVERLAY -->
+
+    <div class="overlay" id="overlay" onclick="closeSettings()"></div>
+
+
+    <!-- SETTINGS PANEL -->
+
+    <aside class="settings-panel" id="settingsPanel">
+
+        <div class="settings-header">
+            <h2>⚙ Settings</h2>
+
+            <button class="close-btn" onclick="closeSettings()">
+                ×
+            </button>
+        </div>
+
+
+        <!-- DARK MODE -->
+
+        <div class="setting">
+
+            <div class="setting-title">
+                🌙 Dark Mode
+            </div>
+
+            <div class="setting-description">
+                Change the website between light and dark mode.
+            </div>
+
+            <div
+                class="toggle"
+                id="darkToggle"
+                onclick="toggleDarkMode()">
+            </div>
+
+        </div>
+
+
+        <!-- COMPACT MODE -->
+
+        <div class="setting">
+
+            <div class="setting-title">
+                📦 Compact Mode
+            </div>
+
+            <div class="setting-description">
+                Make the game cards smaller so more games fit on the screen.
+            </div>
+
+            <div
+                class="toggle"
+                id="compactToggle"
+                onclick="toggleCompact()">
+            </div>
+
+        </div>
+
+
+        <!-- RESET -->
+
+        <div class="setting">
+
+            <div class="setting-title">
+                🔄 Reset Settings
+            </div>
+
+            <div class="setting-description">
+                Reset the website back to its default appearance.
+            </div>
+
+            <button
+                onclick="resetSettings()"
+                style="
+                    background:var(--primary);
+                    color:white;
+                    padding:10px 15px;
+                    border-radius:8px;
+                ">
+                Reset
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <script>
+
+        /* ---------------------------
+           SETTINGS
+        --------------------------- */
+
+        function openSettings() {
+            document
+                .getElementById("settingsPanel")
+                .classList.add("open");
+
+            document
+                .getElementById("overlay")
+                .classList.add("open");
+        }
+
+
+        function closeSettings() {
+            document
+                .getElementById("settingsPanel")
+                .classList.remove("open");
+
+            document
+                .getElementById("overlay")
+                .classList.remove("open");
+        }
+
+
+        /* ---------------------------
+           DARK MODE
+        --------------------------- */
+
+        function toggleDarkMode() {
+
+            document.body.classList.toggle("dark");
+
+            const enabled =
+                document.body.classList.contains("dark");
+
+            document
+                .getElementById("darkToggle")
+                .classList.toggle("active", enabled);
+
+            localStorage.setItem(
+                "darkMode",
+                enabled ? "true" : "false"
+            );
+        }
+
+
+        /* ---------------------------
+           COMPACT MODE
+        --------------------------- */
+
+        function toggleCompact() {
+
+            const games =
+                document.querySelectorAll(".game");
+
+            const enabled =
+                document
+                    .getElementById("compactToggle")
+                    .classList.toggle("active");
+
+            games.forEach(game => {
+
+                const iframe =
+                    game.querySelector("iframe");
+
+                if (enabled) {
+                    iframe.style.height = "200px";
+                } else {
+                    iframe.style.height = "300px";
+                }
+
+            });
+
+            localStorage.setItem(
+                "compactMode",
+                enabled ? "true" : "false"
+            );
+        }
+
+
+        /* ---------------------------
+           SEARCH
+        --------------------------- */
+
+        function searchGames() {
+
+            const search =
+                document
+                    .getElementById("search")
+                    .value
+                    .toLowerCase()
+                    .trim();
+
+            const games =
+                document.querySelectorAll(".game");
+
+            let found = 0;
+
+            games.forEach(game => {
+
+                const name =
+                    game.dataset.name.toLowerCase();
+
+                if (name.includes(search)) {
+
+                    game.classList.remove("hidden");
+                    found++;
+
+                } else {
+
+                    game.classList.add("hidden");
+
+                }
+
+            });
+
+            document
+                .getElementById("noResults")
+                .style.display =
+                    found === 0 ? "block" : "none";
+        }
+
+
+        /* ---------------------------
+           FULLSCREEN
+        --------------------------- */
+
+        function fullscreenGame(button) {
+
+            const game =
+                button.closest(".game");
+
+            const iframe =
+                game.querySelector("iframe");
+
+            if (iframe.requestFullscreen) {
+
+                iframe.requestFullscreen();
+
+            } else if (iframe.webkitRequestFullscreen) {
+
+                iframe.webkitRequestFullscreen();
+
+            }
+        }
+
+
+        /* ---------------------------
+           SCROLL
+        --------------------------- */
+
+        function scrollToGames() {
+
+            document
+                .getElementById("games")
+                .scrollIntoView({
+                    behavior: "smooth"
+                });
+
+        }
+
+
+        /* ---------------------------
+           RESET SETTINGS
+        --------------------------- */
+
+        function resetSettings() {
+
+            localStorage.removeItem("darkMode");
+            localStorage.removeItem("compactMode");
+
+            document.body.classList.remove("dark");
+
+            document
+                .getElementById("darkToggle")
+                .classList.remove("active");
+
+            document
+                .getElementById("compactToggle")
+                .classList.remove("active");
+
+            document
+                .querySelectorAll(".game iframe")
+                .forEach(iframe => {
+                    iframe.style.height = "300px";
+                });
+        }
+
+
+        /* ---------------------------
+           LOAD SAVED SETTINGS
+        --------------------------- */
+
+        window.addEventListener("DOMContentLoaded", () => {
+
+            if (
+                localStorage.getItem("darkMode") === "true"
+            ) {
+
+                document.body.classList.add("dark");
+
+                document
+                    .getElementById("darkToggle")
+                    .classList.add("active");
+            }
+
+
+            if (
+                localStorage.getItem("compactMode") === "true"
+            ) {
+
+                document
+                    .getElementById("compactToggle")
+                    .classList.add("active");
+
+                document
+                    .querySelectorAll(".game iframe")
+                    .forEach(iframe => {
+                        iframe.style.height = "200px";
+                    });
+            }
+
+        });
+
+
+        /* ---------------------------
+           ESCAPE CLOSES SETTINGS
+        --------------------------- */
+
+        document.addEventListener("keydown", event => {
+
+            if (event.key === "Escape") {
+                closeSettings();
+            }
+
+        });
+
+    </script>
+
+</body>
+</html>
